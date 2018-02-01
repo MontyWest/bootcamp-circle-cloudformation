@@ -14,17 +14,13 @@ jobs:
     working_directory: ~/bootcamp-circle-cloudformation
     steps:
       - checkout
-      - run: sh build-and-deploy-to-aws.sh gomers-ASG gomers
+      - run: sh build-and-deploy-to-aws.sh gomers-ASG-AutoScalingGroup-D14WZX1S799N gomers
 
 workflows:
   version: 2
   test-and-deploy:
     jobs:
-      - test:
-          filters:
-            branches:
-              only:
-                - master
+      - test
       - deploy:
           requires:
             - test
