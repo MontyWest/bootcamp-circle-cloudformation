@@ -4,17 +4,39 @@ jobs:
     docker:
       - image: adambene/circleci-openjdk-awscli
     working_directory: ~/bootcamp-circle-cloudformation
+    restore-cache:
+      keys:
+        # Find a cache corresponding to this specific package.json checksum
+        # when this file is changed, this key will fail
+        - sbt-deps-{{ checksum "build.sbt" }}
+        # Find the most recent cache used from any branch
+        - sbt-deps-
     steps:
       - checkout
       - run: sbt test
+    save-cache:
+      key: sbt-deps-{{ checksum "build.sbt" }}
+      paths:
+        - ~/.ivy2
 
   deploy:
     docker:
       - image: adambene/circleci-openjdk-awscli
     working_directory: ~/bootcamp-circle-cloudformation
+    restore-cache:
+      keys:
+        # Find a cache corresponding to this specific package.json checksum
+        # when this file is changed, this key will fail
+        - sbt-deps-{{ checksum "build.sbt" }}
+        # Find the most recent cache used from any branch
+        - sbt-deps-
     steps:
       - checkout
       - run: ./build-and-deploy-to-aws.sh gomers-ASG-AutoScalingGroup-D14WZX1S799N gomers
+    save-cache:
+      key: sbt-deps-{{ checksum "build.sbt" }}
+      paths:
+        - ~/.ivy2
 
 workflows:
   version: 2
